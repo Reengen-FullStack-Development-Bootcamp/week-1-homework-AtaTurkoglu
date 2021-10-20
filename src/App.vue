@@ -84,15 +84,11 @@ export default {
   methods:{
 
     addToCart(e){
-      console.log("e",e)
       let isFound=null
       isFound = this.purchased.find(item=> item.id==e.id && item.color==e.color && item.size==e.size)
-      console.log("isFound",isFound)
       if(!isFound){
-        console.log("1")
         this.purchased.push(e)
       }else{
-        console.log("2")
         isFound.quantity+=e.quantity
       }
       this.alert=true
@@ -102,9 +98,7 @@ export default {
     },
 
     deleteItem(index){
-      console.log("delete",this.purchased[index])
       this.purchased.splice(index,1)
-      console.log("deleted",this.purchased)
     }
 
   },
