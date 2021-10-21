@@ -48,7 +48,7 @@ export const items=[
     {
         id:4,
         category:"Women Training Shoes", 
-        title:"UA TriBase™ Reign 3", 
+        title:"UA - TriBase™ Reign Three", 
         price:220, 
         summary:"Every lift, rep, and WOD starts from the ground up. UA TriBase™ tech maximizes your floor contact with a low, stable, triangular base that lets your foot flex naturally.",
         sizes:[5,6,7,8,9,10,11],

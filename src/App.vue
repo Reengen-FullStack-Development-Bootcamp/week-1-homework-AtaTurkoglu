@@ -124,6 +124,7 @@ export default {
       width: 100%;
       background-color: rgb(86, 117, 196);
       z-index: 2;
+      position: fixed;
   }
   #button-content{
     display: flex;

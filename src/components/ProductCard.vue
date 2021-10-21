@@ -8,24 +8,24 @@
                     </transition>
                 </b-col>
                 <transition name="slideLeft" mode="out-in">
-                <b-col cols="5" class="pt-4 pr-2" :key="selectedcolor">
-                    <p class="head1 mb-0" :class="selectedcolor">{{product.category}}</p>
-                    <p class="head2 mb-2">{{product.title}}</p>
-                    <span class="price" :class="selectedcolor">${{calcPrice}}</span>
-                    <p class="description mt-2">{{product.summary}}</p>
-                </b-col>
+                    <b-col cols="5" class="pt-4 pr-2" :key="selectedcolor">
+                        <p class="head1 mb-0" :class="selectedcolor">{{product.category}}</p>
+                        <p class="head2 mb-2">{{product.title}}</p>
+                        <span class="price" :class="selectedcolor">${{calcPrice}}</span>
+                        <p class="description mt-2">{{product.summary}}</p>
+                    </b-col>
                 </transition>
             </b-row>
             <b-row align-v="center" class="d-flex flex-row align-content-center ">
 
-                <b-col cols="3" class="d-flex flex-row align-items-center m-0">
-                    <span v-for="(s1,i) in product.rating" :key="'1'+i" class="fa fa-star checked" :class="selectedcolor"></span>
-                    <span v-for="(s2,j) in (5-product.rating)" :key="'2'+j" class="fa fa-star-o" :class="selectedcolor"></span>
-                </b-col>
+                    <b-col cols="3" class="d-flex flex-row align-items-center m-0">
+                        <span v-for="(s1,i) in product.rating" :key="'1'+i" class="fa fa-star checked" :class="selectedcolor"></span>
+                        <span v-for="(s2,j) in (5-product.rating)" :key="'2'+j" class="fa fa-star-o" :class="selectedcolor"></span>
+                    </b-col>
 
-                <b-col cols="4" class="d-flex flex-row align-items-center m-0">
+                <b-col v-if="stars" cols="4" class="d-flex flex-row align-items-center m-0">
                     <b-form-group class="d-flex flex-row align-items-center m-0">
-                        <span role="button" v-for="(color,index) in product.colors" :key="index" class="fa fa-circle fa-xs my-0 mx-2 p-0 align-items-center" :class="color" @click="selectedcolor=color"></span>
+                        <span role="button" v-for="(color,index) in product.colors" :key="index" class="fa fa-circle fa-xs my-0 mx-2 p-0 align-items-center" :class="color" @click="selectedcolor=color, loadstars"></span>
                     </b-form-group>
                 </b-col>
 
@@ -42,12 +42,12 @@
             </b-row>
             <b-row>
                 <b-col cols="7">
-                    <b-form-group v-slot="{ ariaDescribedby }" class="d-flex align-items-center">
+                    <b-form-group id="rrr" v-slot="{ ariaDescribedby }" class="d-flex align-items-center bv-no-focus-ring">
                         <b-form-radio 
                          ref="sizeRadios"
-                         button 
+                         button
                          button-variant="none" 
-                         class="r-button" 
+                         class="r-button bv-no-focus-ring" 
                          :class="[selectedcolor, selectedsize==size?bgColor:'']" 
                          v-for="(size,index) in product.sizes" 
                          :key="index" 
@@ -82,8 +82,15 @@ export default {
         selectedcolor:this.product.colors[0],
         quantity:1,
         price:null,
-        warn:false
+        warn:false,
+        rating:null,
+        stars:false
       }
+    },
+
+    mounted(){
+        this.rating=this.product.rating
+        this.loadstars()
     },
     
     computed:{
@@ -100,6 +107,13 @@ export default {
             }else{
                 return this.product.price
             }
+        }
+    },
+
+    watch:{
+        selectedcolor(){
+            this.rating=this.product.rating
+            this.loadstars()
         }
     },
 
@@ -122,7 +136,23 @@ export default {
                 this.$emit("cart",obj)
             }
 
+        },
+
+        loadstars(){
+            this.stars=false
+            this.stars=true
+            const lim = this.rating
+            let rat=0
+            let intrvl = setInterval(() => {
+                this.product.rating=rat
+                rat++
+                if (rat>lim){
+                    clearInterval(intrvl)
+                    this.rating=null
+                }
+            }, 50);
         }
+
     }
 
 }
@@ -184,6 +214,7 @@ export default {
         align-items: center;
         justify-content: center;
         text-align: center;
+        outline: none;
     }
     .size-radio{
         padding: 0;
@@ -367,4 +398,5 @@ export default {
         opacity: 0;
         }
     }
+
 </style>
