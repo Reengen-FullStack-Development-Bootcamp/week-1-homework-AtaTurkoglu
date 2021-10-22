@@ -83,28 +83,31 @@ export default {
 
     data() {
       return {
-        selectedsize:null,
-        selectedcolor:this.product.colors[0],
-        quantity:1,
-        price:null,
-        warn:false,
-        rating:null,
-        stars:false,
-        colorState:true
+        selectedsize:null, //seçilen size
+        selectedcolor:this.product.colors[0], //seçilen renk
+        quantity:1, //adet
+        price:null, //sepete atılan price değeri
+        warn:false, //size seçimini unutmamak için uyarı
+        rating:null, //yıldız yüklemek için kullanılan bir değişken
+        stars:false, //yıldızları renk değiştiğinde tekrar yüklemek için
+        colorState:true //yıldızlar dolmadan yeni renk seçimini engellemek için
       }
     },
 
     mounted(){
+        //başlangıçta yıldızları yüklemek için
         this.rating=this.product.rating
         this.loadstars()
     },
     
     computed:{
 
+        //butonlar için ayakkabı renngine göre arka plan class'ı belirleme
         bgColor(){
             return `bg-${this.selectedcolor}`
         },
 
+        //indirimli fiyat hesaplama
         calcPrice(){
             if(this.selectedsize==this.product.sizes[0]||this.selectedsize==this.product.sizes[this.product.sizes.length-1]){
                 return this.product.price*0.8
@@ -115,6 +118,7 @@ export default {
             }
         },
 
+        //farklı numaralarda indirim olup olmadığı kontrol ediliyor
         discounted(){
             return this.calcPrice<this.product.price
         }
@@ -122,7 +126,9 @@ export default {
     },
 
     watch:{
-        selectedcolor(){
+
+        //renk değişimi takip ediliyor
+        selectedcolor(){                            
             this.colorState=false
             this.rating=this.product.rating
             this.loadstars()
@@ -130,12 +136,14 @@ export default {
     },
 
     methods:{
+
+        //ürünlerin sepete atılması
         addToCart(){
             if(this.selectedsize==null){
                 this.warn=true
                 setTimeout(() => {
                     this.warn=false
-                }, 1000);
+                }, 1000);                         //size seçilmediyse 1 saniyelik uyarı veriyoruz 
             }else{
                 let obj={
                     id:this.product.id,
@@ -150,8 +158,9 @@ export default {
 
         },
 
+        //yıldızları (rating) yükleme fonksiyonu
         loadstars(){
-            this.stars=false
+            this.stars=false //state değiştirerek tekrardan yüklenmesini sağlıyoruz çünkü renge göre farklı rating vermedim
             this.stars=true
             const lim = this.rating
             let rat=0

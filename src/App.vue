@@ -55,26 +55,20 @@ export default {
 
   data(){
     return{
-      items:items,
-      products:[],
-      purchased:[],
-      alert:false,
+      items:items, //ürünleri dosyadan alıyoruz
+      products:[], //ürünleri transition için sırayla bu değişkene atıyoruz
+      purchased:[], //sepete atılmış ürünler
+      alert:false, //sepete yeni bir ürün eklendiğini belirtiyoruz
     }
   },
 
   mounted(){
-    let r=0
-    let intrvl = setInterval(() => {
-      this.products.push(this.items[r])
-      r++
-      if(r>=this.items.length){
-        clearInterval(intrvl)
-      }
-    }, 250);
+    this.loadProductCards() //ürün kartlarını sırayla yüklemek için
   },
 
   computed:{
 
+    //sepetteki toplam ürün sayısı hesaplanıyor
     allItem(){
       let counter=0
       this.purchased.forEach(item => {
@@ -83,6 +77,7 @@ export default {
       return counter
     },
 
+    //spetteki toplam fiyat bulunuyor
     totalPrice(){
       if(this.purchased.length>0){
         return this.purchased.map(item=>item.price*item.quantity).reduce((a,b)=>a+b)
@@ -95,6 +90,7 @@ export default {
 
   methods:{
 
+    //child componentlerden gelen ürünler sepete ekleniyor
     addToCart(e){
       let isFound=null
       isFound = this.purchased.find(item=> item.id==e.id && item.color==e.color && item.size==e.size)
@@ -109,8 +105,21 @@ export default {
       }, 2000);
     },
 
+    //sepetteki ürünleri tek tek silmek için
     deleteItem(index){
       this.purchased.splice(index,1)
+    },
+
+    //ürün kartlarını sırayla yüklemek için
+    loadProductCards(){
+      let r=0
+      let intrvl = setInterval(() => {
+        this.products.push(this.items[r])
+        r++
+        if(r>=this.items.length){
+          clearInterval(intrvl)
+        }
+      }, 250);
     }
 
   },
