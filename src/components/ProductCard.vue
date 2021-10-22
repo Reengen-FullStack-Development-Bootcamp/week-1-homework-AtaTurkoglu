@@ -1,5 +1,6 @@
 <template>
-    <div id="card">
+    <transition name="listComp">
+    <div id="card" class="card">
         <b-container class="w-100 h-100 bv-example-row">
             <b-row class="m-0">
                 <b-col cols="7">
@@ -11,21 +12,24 @@
                     <b-col cols="5" class="pt-4 pr-2" :key="selectedcolor">
                         <p class="head1 mb-0" :class="selectedcolor">{{product.category}}</p>
                         <p class="head2 mb-2">{{product.title}}</p>
-                        <span class="price" :class="selectedcolor">${{calcPrice}}</span>
+                        <div style="position:relative">
+                            <span class="price" :class="[discounted?'discount':'', selectedcolor]">${{product.price}}</span>
+                            <span v-if="discounted" class="price newprice ml-4" :class="[selectedcolor]">${{calcPrice}}</span>        
+                        </div>
                         <p class="description mt-2">{{product.summary}}</p>
                     </b-col>
                 </transition>
             </b-row>
             <b-row align-v="center" class="d-flex flex-row align-content-center ">
 
-                    <b-col cols="3" class="d-flex flex-row align-items-center m-0">
-                        <span v-for="(s1,i) in product.rating" :key="'1'+i" class="fa fa-star checked" :class="selectedcolor"></span>
-                        <span v-for="(s2,j) in (5-product.rating)" :key="'2'+j" class="fa fa-star-o" :class="selectedcolor"></span>
-                    </b-col>
+                <b-col cols="3" class="d-flex flex-row align-items-center m-0">
+                    <span v-for="(s1,i) in product.rating" :key="'1'+i" class="fa fa-star checked" :class="selectedcolor"></span>
+                    <span v-for="(s2,j) in (5-product.rating)" :key="'2'+j" class="fa fa-star-o" :class="selectedcolor"></span>
+                </b-col>
 
                 <b-col v-if="stars" cols="4" class="d-flex flex-row align-items-center m-0">
                     <b-form-group class="d-flex flex-row align-items-center m-0">
-                        <span role="button" v-for="(color,index) in product.colors" :key="index" class="fa fa-circle fa-xs my-0 mx-2 p-0 align-items-center" :class="color" @click="selectedcolor=color, loadstars"></span>
+                        <span role="button" v-for="(color,index) in product.colors" :key="index" class="fa fa-circle fa-xs my-0 mx-2 p-0 align-items-center" :class="[color]" @click="colorState?[selectedcolor=color,loadstars]:''"></span>
                     </b-form-group>
                 </b-col>
 
@@ -42,12 +46,12 @@
             </b-row>
             <b-row>
                 <b-col cols="7">
-                    <b-form-group id="rrr" v-slot="{ ariaDescribedby }" class="d-flex align-items-center bv-no-focus-ring">
+                    <b-form-group v-slot="{ ariaDescribedby }" class="d-flex align-items-center">
                         <b-form-radio 
                          ref="sizeRadios"
                          button
                          button-variant="none" 
-                         class="r-button bv-no-focus-ring" 
+                         class="r-button" 
                          :class="[selectedcolor, selectedsize==size?bgColor:'']" 
                          v-for="(size,index) in product.sizes" 
                          :key="index" 
@@ -69,6 +73,7 @@
             </transition>
         </b-container>
     </div>
+    </transition>
 </template>
 
 <script>
@@ -84,7 +89,8 @@ export default {
         price:null,
         warn:false,
         rating:null,
-        stars:false
+        stars:false,
+        colorState:true
       }
     },
 
@@ -107,11 +113,17 @@ export default {
             }else{
                 return this.product.price
             }
+        },
+
+        discounted(){
+            return this.calcPrice<this.product.price
         }
+
     },
 
     watch:{
         selectedcolor(){
+            this.colorState=false
             this.rating=this.product.rating
             this.loadstars()
         }
@@ -149,8 +161,9 @@ export default {
                 if (rat>lim){
                     clearInterval(intrvl)
                     this.rating=null
+                    this.colorState=true
                 }
-            }, 50);
+            }, 400/lim);
         }
 
     }
@@ -163,13 +176,18 @@ export default {
         height: 380px;
         width: 550px;
         border-radius: 10px;
-        /*box-shadow: 10px 10px 10px -2px #D4B6B7, -2px -2px 10px -2px #D4B6B7;*/
         box-shadow: 10px 10px 10px -2px #ababab, -2px -2px 10px -2px #ababab;
         background-color: #F4F4F4;
         margin-inline: 60px;
-        margin-block: 30px;
+        margin-block: 40px;
         overflow: hidden;
         position: relative;
+    }
+    .card:nth-child(odd){
+        animation: left .5s ease-out;
+    }
+    .card:nth-child(even){
+        animation: right .5s ease-out;
     }
     img{
         width: 100%;
@@ -189,6 +207,12 @@ export default {
         margin-block: 10px;
         font-weight: 700;
         color: #CCA9A8;
+    }
+    .newprice{
+        position:absolute;
+        top: -25%;
+        left: 25%;
+        animation: right .2s linear;
     }
     .description{
         font-size: 11px;
@@ -344,6 +368,23 @@ export default {
         left: 0;
         background-color:#F4F4F4;;
     }
+    .discount{
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+    .discount::before{
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 85%;
+        width: 110%;
+        border-bottom: 4px solid rgb(57, 57, 57);
+        transform-origin: 0 70%;
+        animation: draw .2s linear;
+        animation-fill-mode: forwards;
+    }
 
     .slideRight-enter-active {
         animation: toRight .3s ease-in-out;
@@ -399,4 +440,50 @@ export default {
         }
     }
 
+    .listComp-enter-active {
+        animation: occour 3s ease-in-out;
+    }
+    @keyframes occour {
+        from{
+        opacity: 0;
+        }
+        to{
+        opacity: 1;
+        }
+    }
+
+    @keyframes draw {
+        0% {
+            width: 0;
+            transform: rotateZ(-15deg) scaleX(0);
+
+        }
+        100% {
+            width: 100%;
+            transform:rotateZ(-15deg) scaleX(1);
+        }
+    }
+
+    @keyframes right {
+        0% {
+            opacity:0;
+            transform: translateX(-150%);
+
+        }
+        100% {
+            opaticty:1;
+            transform:translateX(0);
+        }
+    }
+    @keyframes left {
+        0% {
+            opacity:0;
+            transform: translateX(150%);
+
+        }
+        100% {
+            opaticty:1;
+            transform:translateX(0);
+        }
+    }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" >
       <div id="navbar">
         <b-navbar toggleable="lg" type="dark">
             <b-navbar-brand style="font-weight:bold">ShoeShop</b-navbar-brand>
@@ -38,7 +38,7 @@
             </b-collapse>
         </b-navbar>
     </div>
-    <ProductCard v-for="(product,index) in products" :key="index" :product="product" @cart="addToCart"/>
+    <ProductCard  v-for="(product,index) in products" :key="index" :product="product" @cart="addToCart"/>
   </div>
 </template>
 
@@ -55,10 +55,22 @@ export default {
 
   data(){
     return{
-      products:items,
+      items:items,
+      products:[],
       purchased:[],
-      alert:false
+      alert:false,
     }
+  },
+
+  mounted(){
+    let r=0
+    let intrvl = setInterval(() => {
+      this.products.push(this.items[r])
+      r++
+      if(r>=this.items.length){
+        clearInterval(intrvl)
+      }
+    }, 250);
   },
 
   computed:{
@@ -109,13 +121,16 @@ export default {
   #app {
     height: 100%;
     width: 100%;
+    min-height: 100vh;
     background-color: rgb(213, 213, 213);
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
     flex-wrap: wrap;
-    padding-top: 80px;
+    padding-top: 70px;
+    padding-inline: 75px;
+    font-family: 'Mako', sans-serif;
+    justify-content: space-between;
   }
   #navbar{
       position: absolute;
@@ -125,6 +140,7 @@ export default {
       background-color: rgb(86, 117, 196);
       z-index: 2;
       position: fixed;
+      box-shadow: 0 10px 7px -2px #ababab
   }
   #button-content{
     display: flex;
