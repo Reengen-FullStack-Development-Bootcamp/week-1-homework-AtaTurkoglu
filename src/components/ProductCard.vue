@@ -1,13 +1,15 @@
 <template>
-    <transition name="listComp">
     <div id="card" class="card">
         <b-container class="w-100 h-100 bv-example-row">
+
             <b-row class="m-0">
+            
                 <b-col cols="7">
                     <transition name="slideRight" mode="out-in">
                         <img :src="product.images[selectedcolor]" :key="selectedcolor">
                     </transition>
                 </b-col>
+            
                 <transition name="slideLeft" mode="out-in">
                     <b-col cols="5" class="pt-4 pr-2" :key="selectedcolor">
                         <p class="head1 mb-0" :class="selectedcolor">{{product.category}}</p>
@@ -19,7 +21,9 @@
                         <p class="description mt-2">{{product.summary}}</p>
                     </b-col>
                 </transition>
+            
             </b-row>
+            
             <b-row align-v="center" class="d-flex flex-row align-content-center ">
 
                 <b-col cols="3" class="d-flex flex-row align-items-center m-0">
@@ -34,17 +38,23 @@
                 </b-col>
 
             </b-row>
+            
             <b-row class="m-0">
+            
                 <b-col cols="7" class="m-0 p-0 d-flex align-items-center">
                     <p class="radiogroup" :class="selectedcolor">CHOOSE SIZE</p>
                 </b-col>
+                
                 <b-col cols="5" class="d-flex align-items-center justify-content-center w-100">
                     <span role="button" class="fa fa-minus mx-3" :class="selectedcolor" aria-hidden="true" @click="quantity--,quantity<=1?quantity=1:''"></span>
                     <b-badge variant="light" size="lg" :class="selectedcolor" style="font-size:18px; background-color:#F4F4F4">{{quantity}}</b-badge>
                     <span role="button" class="fa fa-plus mx-3" :class="selectedcolor" aria-hidden="true" @click="quantity++"></span>
                 </b-col>
+            
             </b-row>
+            
             <b-row>
+            
                 <b-col cols="7">
                     <b-form-group v-slot="{ ariaDescribedby }" class="d-flex align-items-center">
                         <b-form-radio 
@@ -64,16 +74,19 @@
                         </b-form-radio>
                     </b-form-group>                
                 </b-col>
+            
                 <b-col cols="5">
                     <b-button class="w-100 m-0 addbutton" :class="bgColor" @click="addToCart">Add To Cart</b-button>
                 </b-col>
+            
             </b-row>
+
             <transition name="fade">
                 <div v-show="warn" class="warn" :class="selectedcolor">Choose a Size</div>
             </transition>
+
         </b-container>
     </div>
-    </transition>
 </template>
 
 <script>
@@ -254,6 +267,7 @@ export default {
         margin: 0;
         font-size: 13px;
         color: #CCA9A8;
+        appearance: none
     }
     .color-r-btn{
         margin: 0;
@@ -446,18 +460,6 @@ export default {
         to{
         transform: translateY(100%);
         opacity: 0;
-        }
-    }
-
-    .listComp-enter-active {
-        animation: occour 3s ease-in-out;
-    }
-    @keyframes occour {
-        from{
-        opacity: 0;
-        }
-        to{
-        opacity: 1;
         }
     }
 

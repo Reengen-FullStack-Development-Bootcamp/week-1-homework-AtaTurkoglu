@@ -1,5 +1,6 @@
 <template>
   <div id="app" >
+
       <div id="navbar">
         <b-navbar toggleable="lg" type="dark">
             <b-navbar-brand style="font-weight:bold">ShoeShop</b-navbar-brand>
@@ -38,7 +39,9 @@
             </b-collapse>
         </b-navbar>
     </div>
+
     <ProductCard  v-for="(product,index) in products" :key="index" :product="product" @cart="addToCart"/>
+  
   </div>
 </template>
 
