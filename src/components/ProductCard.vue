@@ -5,9 +5,9 @@
             <b-row class="m-0">
             
                 <b-col cols="7">
-                    <transition name="slideRight" mode="out-in">
-                        <img :src="product.images[selectedcolor]" :key="selectedcolor">
-                    </transition>
+                    <transition-group name="slideRight" mode="out-in">
+                        <img v-show="img==product.images[selectedcolor]" v-for="(img,i) in product.images" :src="img" :key="i">
+                    </transition-group>
                 </b-col>
             
                 <transition name="slideLeft" mode="out-in">
@@ -58,7 +58,6 @@
                 <b-col cols="7">
                     <b-form-group v-slot="{ ariaDescribedby }" class="d-flex align-items-center">
                         <b-form-radio 
-                         ref="sizeRadios"
                          button
                          button-variant="none" 
                          class="r-button" 
@@ -103,11 +102,12 @@ export default {
         warn:false, //size seçimini unutmamak için uyarı
         rating:null, //yıldız yüklemek için kullanılan bir değişken
         stars:false, //yıldızları renk değiştiğinde tekrar yüklemek için
-        colorState:true //yıldızlar dolmadan yeni renk seçimini engellemek için
+        colorState:true, //yıldızlar dolmadan yeni renk seçimini engellemek için
       }
     },
 
     mounted(){
+        
         //başlangıçta yıldızları yüklemek için
         this.rating=this.product.rating
         this.loadstars()
@@ -141,7 +141,7 @@ export default {
     watch:{
 
         //renk değişimi takip ediliyor
-        selectedcolor(){                            
+        selectedcolor(){                 
             this.colorState=false
             this.rating=this.product.rating
             this.loadstars()
@@ -186,7 +186,7 @@ export default {
                     this.colorState=true
                 }
             }, 400/lim);
-        }
+        },
 
     }
 
@@ -497,4 +497,5 @@ export default {
             transform:translateX(0);
         }
     }
+
 </style>
