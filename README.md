@@ -1,24 +1,5 @@
-# odev1
+https://ata-patika-odev1.surge.sh/
 
-## Project setup
-```
-npm install
-```
+Product Card for practicing and homework
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![productCard](https://user-images.githubusercontent.com/71823597/143733340-46708f4d-ad7a-4377-a1c1-4df394122835.gif)
